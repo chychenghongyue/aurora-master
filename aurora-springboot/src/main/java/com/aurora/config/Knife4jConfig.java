@@ -22,7 +22,7 @@ public class Knife4jConfig {
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .protocols(Collections.singleton("https"))
-                //.host("https://www.linhaojun.top")
+                .host("https://www.linhaojun.top")
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.aurora.controller"))
@@ -35,7 +35,7 @@ public class Knife4jConfig {
                 .title("aurora文档")
                 .description("aurora")
                 .contact(new Contact("长乐予安", "", "3319023171@qq.com"))
-                //.termsOfServiceUrl("https://www.linhaojun.top/api")
+                .termsOfServiceUrl("https://www.linhaojun.top/api")
                 .version("1.0")
                 .build();
     }
