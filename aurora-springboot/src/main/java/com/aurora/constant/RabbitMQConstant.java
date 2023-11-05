@@ -2,9 +2,9 @@ package com.aurora.constant;
 
 public interface RabbitMQConstant {
 
-    String ELASTIC_QUEUE = "elastic_queue";
+    String MAXWELL_QUEUE = "maxwell_queue";
 
-    String ELASTIC_EXCHANGE = "elastic_exchange";
+    String MAXWELL_EXCHANGE = "maxwell_exchange";
 
     String EMAIL_QUEUE = "email_queue";
 

@@ -80,8 +80,8 @@ mybatis-plus:
     map-underscore-to-camel-case: true
 
 search:
-#  mode: mysql
-  mode: elasticsearch
+  mode: mysql
+#  mode: elasticsearch
 
 upload:
   mode: minio

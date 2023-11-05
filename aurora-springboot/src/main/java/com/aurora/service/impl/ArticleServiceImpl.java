@@ -1,6 +1,7 @@
 package com.aurora.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.aurora.model.dto.*;
 import com.aurora.entity.Article;
 import com.aurora.entity.ArticleTag;
 import com.aurora.entity.Category;
@@ -12,8 +13,6 @@ import com.aurora.mapper.ArticleMapper;
 import com.aurora.mapper.ArticleTagMapper;
 import com.aurora.mapper.CategoryMapper;
 import com.aurora.mapper.TagMapper;
-import com.aurora.model.dto.*;
-import com.aurora.model.vo.*;
 import com.aurora.service.ArticleService;
 import com.aurora.service.ArticleTagService;
 import com.aurora.service.RedisService;
@@ -23,6 +22,7 @@ import com.aurora.strategy.context.UploadStrategyContext;
 import com.aurora.util.BeanCopyUtil;
 import com.aurora.util.PageUtil;
 import com.aurora.util.UserUtil;
+import com.aurora.model.vo.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -30,7 +30,6 @@ import lombok.SneakyThrows;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,11 +40,9 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import static com.aurora.constant.RabbitMQConstant.ELASTIC_EXCHANGE;
 import static com.aurora.constant.RabbitMQConstant.SUBSCRIBE_EXCHANGE;
-import static com.aurora.constant.RedisConstant.ARTICLE_ACCESS;
-import static com.aurora.constant.RedisConstant.ARTICLE_VIEWS_COUNT;
-import static com.aurora.enums.ArticleStatusEnum.DRAFT;
+import static com.aurora.constant.RedisConstant.*;
+import static com.aurora.enums.ArticleStatusEnum.*;
 import static com.aurora.enums.StatusCodeEnum.ARTICLE_ACCESS_FAIL;
 
 @Service
@@ -251,14 +248,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         this.saveOrUpdate(article);
         saveArticleTag(articleVO, article.getId());
         if (article.getStatus().equals(1)) {
-            ArticleSearchDTO articleSearchDTO = new ArticleSearchDTO();
-            BeanUtils.copyProperties(article, articleSearchDTO);
-            Map<String, Object> map = new HashMap<>();
-            map.put("data", articleSearchDTO);
-            map.put("info", "insertOrUpDate");
-            rabbitTemplate.convertAndSend(ELASTIC_EXCHANGE,null, map);
-            log.error("发送到elastic");
-            rabbitTemplate.convertAndSend(SUBSCRIBE_EXCHANGE, new Message(JSON.toJSONBytes(article.getId()), new MessageProperties()));
+            rabbitTemplate.convertAndSend(SUBSCRIBE_EXCHANGE, "*", new Message(JSON.toJSONBytes(article.getId()), new MessageProperties()));
         }
     }
 
@@ -289,10 +279,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         articleTagMapper.delete(new LambdaQueryWrapper<ArticleTag>()
                 .in(ArticleTag::getArticleId, articleIds));
         articleMapper.deleteBatchIds(articleIds);
-        Map<String, Object> map = new HashMap<>();
-        map.put("data", articleIds);
-        map.put("info", "insertOrUpDate");
-        rabbitTemplate.convertAndSend(ELASTIC_EXCHANGE,null, map);
     }
 
     @Override
