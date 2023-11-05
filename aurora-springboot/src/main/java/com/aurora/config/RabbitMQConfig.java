@@ -14,12 +14,12 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue articleQueue() {
-        return new Queue(MAXWELL_QUEUE, true);
+        return new Queue(ELASTIC_QUEUE, true);
     }
 
     @Bean
     public FanoutExchange maxWellExchange() {
-        return new FanoutExchange(MAXWELL_EXCHANGE, true, false);
+        return new FanoutExchange(ELASTIC_EXCHANGE, true, false);
     }
 
     @Bean

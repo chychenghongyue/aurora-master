@@ -9,12 +9,14 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(indexName = "article")
-public class ArticleSearchDTO {
+public class ArticleSearchDTO implements Serializable {
 
     @Id
     private Integer id;

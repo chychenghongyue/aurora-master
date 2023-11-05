@@ -9,8 +9,8 @@ import com.aurora.service.ArticleService;
 import com.aurora.service.UserInfoService;
 import com.aurora.util.EmailUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import org.springframework.amqp.rabbit.annotation.RabbitHandler;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.core.ExchangeTypes;
+import org.springframework.amqp.rabbit.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,10 +21,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.aurora.constant.CommonConstant.TRUE;
-import static com.aurora.constant.RabbitMQConstant.SUBSCRIBE_QUEUE;
+import static com.aurora.constant.RabbitMQConstant.*;
 
 @Component
-@RabbitListener(queues = SUBSCRIBE_QUEUE)
 public class SubscribeConsumer {
 
     @Value("${website.url}")
@@ -39,7 +38,10 @@ public class SubscribeConsumer {
     @Autowired
     private EmailUtil emailUtil;
 
-    @RabbitHandler
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(name = SUBSCRIBE_QUEUE,
+                    durable = "true"),
+            exchange = @Exchange(name = SUBSCRIBE_EXCHANGE, type = ExchangeTypes.FANOUT)))
     public void process(byte[] data) {
         Integer articleId = JSON.parseObject(new String(data), Integer.class);
         Article article = articleService.getOne(new LambdaQueryWrapper<Article>().eq(Article::getId, articleId));
