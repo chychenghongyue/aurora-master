@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.aurora.mapper.RoleMapper">
+<mapper namespace="com.blog.mapper.RoleMapper">
     <resultMap id="roleMap" type="com.blog.model.dto.RoleDTO">
         <id property="id" column="id"/>
         <result property="roleName" column="role_name"/>

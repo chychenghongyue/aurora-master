@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.aurora.mapper.UserAuthMapper">
+<mapper namespace="com.blog.mapper.UserAuthMapper">
     <resultMap id="UserAdminMap" type="com.blog.model.dto.UserAdminDTO">
         <id property="id" column="id"/>
         <result property="userInfoId" column="user_info_id"/>
