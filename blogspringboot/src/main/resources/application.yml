@@ -88,7 +88,7 @@ upload:
   minio:
     url: http://192.168.188.128:9000/
     endpoint: http://192.168.188.128:9000
-    bucketName: blog
+    bucketName: aurora
     accessKey: minioadmin
     secretKey: minioadmin
 
