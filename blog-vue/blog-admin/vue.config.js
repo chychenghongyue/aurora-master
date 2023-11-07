@@ -7,9 +7,11 @@ module.exports = defineConfig({
   transpileDependencies: true,
   productionSourceMap: false,
   devServer: {
+    port:8090, // 启动端口号
+    open:true , // 启动后是否自动打开网页
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'http://47.95.215.231:8888',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''
