@@ -5,9 +5,9 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.188.128:3306/blog?serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://47.95.215.231:3306/blog?serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: root
-    password: 123456
+    password: chy211985CHY@!!(*%
     hikari:
       minimum-idle: 10
       idle-timeout: 180000
@@ -19,9 +19,9 @@ spring:
       connection-test-query: SELECT 1
 
   redis:
-    host: 192.168.188.128
+    host: 47.95.215.231
     port: 6379
-    password: 123456
+    password: chy211985CHY@!!(*%
     database: 0
     lettuce:
       pool:
@@ -31,10 +31,10 @@ spring:
         max-wait: 10000
 
   rabbitmq:
-    host: 192.168.188.128
+    host: 47.95.215.231
     port: 5672
     username: rabbitmq
-    password: rabbitmq
+    password: chy211985CHY@!!(*%
     listener:
       simple:
         retry:
@@ -86,17 +86,17 @@ search:
 upload:
   mode: minio
   minio:
-    url: http://192.168.188.128:9000/
-    endpoint: http://192.168.188.128:9000
+    url: http://47.95.215.231:9000/
+    endpoint: http://47.95.215.231:9000
     bucketName: aurora
     accessKey: minioadmin
-    secretKey: minioadmin
+    secretKey: chy211985CHY@!!(*%
 
 
 
 
 website:
-  url: https://localhost:8080
+  url: https://www.chyblog.top
 
 qq:
   app-id: QQ APPID
