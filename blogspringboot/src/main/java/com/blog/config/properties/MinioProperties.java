@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "upload.minio")
 public class MinioProperties {
 
-    private String url;
-
     private String endpoint;
 
     private String accessKey;

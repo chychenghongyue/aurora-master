@@ -88,9 +88,8 @@ search:
 upload:
   mode: minio
   minio:
-    url: http://47.95.215.231:9000/
     endpoint: http://47.95.215.231:9000
-    bucketName: aurora
+    bucketName: blog
     accessKey: minioadmin
     secretKey: chy211985CHY@!!(*%
 
