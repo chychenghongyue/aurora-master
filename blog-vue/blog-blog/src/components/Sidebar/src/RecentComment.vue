@@ -70,7 +70,7 @@ export default defineComponent({
     }
     return {
       comments: toRef(commentStore.$state, 'recentComment'),
-      default: 'https://static.linhaojun.top/aurora/config/0af1901da1e64dfb99bb61db21e716c4.jpeg',
+      default: 'http://47.95.215.231:9000/blog/blog/config/94afe760273f7d11f4054eb9c5829989.jpeg',
       t
     }
   }

@@ -10,8 +10,8 @@
         <span v-if="$i18n.locale == 'en'">EN</span>
       </span>
       <DropdownMenu>
-        <DropdownItem name="en">English</DropdownItem>
         <DropdownItem name="cn">中文</DropdownItem>
+        <DropdownItem name="en">English</DropdownItem>
       </DropdownMenu>
     </Dropdown>
     <template v-if="userInfo === ''">
@@ -50,7 +50,7 @@
         <el-button type="primary" @click="login" size="large" class="mx-auto mt-3">登录</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="button" class="mx-auto my-el-button" @click="qqLogin">QQ登录</el-button>
+<!--        <el-button type="button" class="mx-auto my-el-button" @click="qqLogin">QQ登录</el-button>-->
       </el-form-item>
       <div class="mt-8">
         <span class="text" @click="openRegisterDialog">立即注册</span>

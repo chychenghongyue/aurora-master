@@ -12,7 +12,7 @@
             </li>
             <li v-if="websiteConfig.gonganBeianNumber != '' && websiteConfig.gonganBeianNumber != undefined" class="flex flex-row mx-auto">
               <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11011402013558" target="_blank">
-                <img src="https://oss.supermouse.cn/aurora/config/gongan-beian-icon.png" style="float:left;"/> &nbsp;
+                <img src="http://47.95.215.231:9000/blog/blog/config/d0289dc0a46fc5b15b3363ffa78cf6c7.png" style="float:left;"/> &nbsp;
                 <b class="font-extrabold border-b-2 border-ob hover:text-ob"> {{ websiteConfig.gonganBeianNumber }} </b>
               </a>
             </li>
