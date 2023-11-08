@@ -1,5 +1,5 @@
 {
-  "name": "aurora-springboot",
+  "name": "blog-springboot",
   "version": "1.0.0",
   "scripts": {
     "deploy": "node deploy.js"

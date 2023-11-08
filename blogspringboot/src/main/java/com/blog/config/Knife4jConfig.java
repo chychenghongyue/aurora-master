@@ -25,15 +25,15 @@ public class Knife4jConfig {
                 .host("https://www.linhaojun.top")
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.aurora.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.blog.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("aurora文档")
-                .description("aurora")
+                .title("blog文档")
+                .description("blog")
                 .contact(new Contact("长乐予安", "", "3319023171@qq.com"))
                 .termsOfServiceUrl("https://www.linhaojun.top/api")
                 .version("1.0")

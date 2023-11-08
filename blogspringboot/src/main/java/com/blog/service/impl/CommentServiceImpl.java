@@ -12,7 +12,7 @@ import com.blog.mapper.ArticleMapper;
 import com.blog.mapper.CommentMapper;
 import com.blog.mapper.TalkMapper;
 import com.blog.mapper.UserInfoMapper;
-import com.blog.service.AuroraInfoService;
+import com.blog.service.blogInfoService;
 import com.blog.service.CommentService;
 import com.blog.util.HTMLUtil;
 import com.blog.util.PageUtil;
@@ -62,7 +62,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private UserInfoMapper userInfoMapper;
 
     @Autowired
-    private AuroraInfoService auroraInfoService;
+    private blogInfoService blogInfoService;
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
@@ -80,7 +80,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Override
     public void saveComment(CommentVO commentVO) {
         checkCommentVO(commentVO);
-        WebsiteConfigDTO websiteConfig = auroraInfoService.getWebsiteConfig();
+        WebsiteConfigDTO websiteConfig = blogInfoService.getWebsiteConfig();
         Integer isCommentReview = websiteConfig.getIsCommentReview();
         commentVO.setCommentContent(HTMLUtil.filter(commentVO.getCommentContent()));
         Comment comment = Comment.builder()

@@ -12,7 +12,7 @@ import com.blog.exception.BizException;
 import com.blog.mapper.UserAuthMapper;
 import com.blog.mapper.UserInfoMapper;
 import com.blog.mapper.UserRoleMapper;
-import com.blog.service.AuroraInfoService;
+import com.blog.service.blogInfoService;
 import com.blog.service.RedisService;
 import com.blog.service.TokenService;
 import com.blog.service.UserAuthService;
@@ -58,7 +58,7 @@ public class UserAuthServiceImpl implements UserAuthService {
     private RedisService redisService;
 
     @Autowired
-    private AuroraInfoService auroraInfoService;
+    private blogInfoService blogInfoService;
 
     @Autowired
     private TokenService tokenService;
@@ -127,7 +127,7 @@ public class UserAuthServiceImpl implements UserAuthService {
         UserInfo userInfo = UserInfo.builder()
                 .email(userVO.getUsername())
                 .nickname(CommonConstant.DEFAULT_NICKNAME + IdWorker.getId())
-                .avatar(auroraInfoService.getWebsiteConfig().getUserAvatar())
+                .avatar(blogInfoService.getWebsiteConfig().getUserAvatar())
                 .build();
         userInfoMapper.insert(userInfo);
         UserRole userRole = UserRole.builder()
