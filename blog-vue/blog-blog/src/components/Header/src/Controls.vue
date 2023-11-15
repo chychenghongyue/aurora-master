@@ -172,6 +172,7 @@ export default defineComponent({
     const handleClick = (name: string): void => {
       appStore.changeLocale(name)
     }
+    handleClick('cn');//设置默认为中文显示
     const login = () => {
       if (loginInfo.username.trim().length == 0 || loginInfo.password.trim().length == 0) {
         proxy.$notify({
