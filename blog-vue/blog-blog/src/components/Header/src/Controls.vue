@@ -50,7 +50,9 @@
         <el-button type="primary" @click="login" size="large" class="mx-auto mt-3">登录</el-button>
       </el-form-item>
       <el-form-item>
-<!--        <el-button type="button" class="mx-auto my-el-button" @click="qqLogin">QQ登录</el-button>-->
+        <el-button type="button" class="mx-auto my-el-button" @click="qqLogin">
+          <img src="../../../assets/QQ.png" width="25" height="25" />QQ登录
+        </el-button>
       </el-form-item>
       <div class="mt-8">
         <span class="text" @click="openRegisterDialog">立即注册</span>
