@@ -1,7 +1,7 @@
 export default {
   qqLogin: {
     QQ_APP_ID: '102076958',
-    QQ_REDIRECT_URI: 'https://www.chyblog.top/oauth/login/qq'
+    QQ_REDIRECT_URI: 'http://www.chyblog.top/oauth/login/qq'
   },
   routes: [
     {

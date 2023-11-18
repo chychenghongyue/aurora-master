@@ -3,16 +3,18 @@ package com.blog.strategy.impl;
 import com.alibaba.fastjson.JSON;
 import com.blog.config.properties.QQConfigProperties;
 import com.blog.constant.SocialLoginConstant;
+import com.blog.enums.LoginTypeEnum;
+import com.blog.exception.BizException;
 import com.blog.model.dto.QQTokenDTO;
 import com.blog.model.dto.QQUserInfoDTO;
 import com.blog.model.dto.SocialTokenDTO;
 import com.blog.model.dto.SocialUserInfoDTO;
-import com.blog.enums.LoginTypeEnum;
-import com.blog.exception.BizException;
-import com.blog.util.CommonUtil;
 import com.blog.model.vo.QQLoginVO;
+import com.blog.util.CommonUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
@@ -23,6 +25,8 @@ import static com.blog.constant.SocialLoginConstant.*;
 import static com.blog.enums.StatusCodeEnum.QQ_LOGIN_ERROR;
 
 @Service("qqLoginStrategyImpl")
+@Transactional
+@Slf4j
 public class QQLoginStrategyImpl extends AbstractSocialLoginStrategyImpl {
 
     @Autowired
@@ -48,7 +52,8 @@ public class QQLoginStrategyImpl extends AbstractSocialLoginStrategyImpl {
         formData.put(QQ_OPEN_ID, socialTokenDTO.getOpenId());
         formData.put(ACCESS_TOKEN, socialTokenDTO.getAccessToken());
         formData.put(OAUTH_CONSUMER_KEY, qqConfigProperties.getAppId());
-        QQUserInfoDTO qqUserInfoDTO = JSON.parseObject(restTemplate.getForObject(qqConfigProperties.getUserInfoUrl(), String.class, formData), QQUserInfoDTO.class);
+        //
+        QQUserInfoDTO qqUserInfoDTO = JSON.parseObject(restTemplate.getForObject(qqConfigProperties.getUserInfoUrl(), String.class, formData.get(QQ_OPEN_ID), formData.get(ACCESS_TOKEN), formData.get(OAUTH_CONSUMER_KEY)), QQUserInfoDTO.class);
         return SocialUserInfoDTO.builder()
                 .nickname(Objects.requireNonNull(qqUserInfoDTO).getNickname())
                 .avatar(qqUserInfoDTO.getFigureurl_qq_1())
@@ -59,7 +64,7 @@ public class QQLoginStrategyImpl extends AbstractSocialLoginStrategyImpl {
         Map<String, String> qqData = new HashMap<>(1);
         qqData.put(SocialLoginConstant.ACCESS_TOKEN, qqLoginVO.getAccessToken());
         try {
-            String result = restTemplate.getForObject(qqConfigProperties.getCheckTokenUrl(), String.class, qqData);
+            String result = restTemplate.getForObject(qqConfigProperties.getCheckTokenUrl(), String.class, qqData.get(SocialLoginConstant.ACCESS_TOKEN));
             QQTokenDTO qqTokenDTO = JSON.parseObject(CommonUtil.getBracketsContent(Objects.requireNonNull(result)), QQTokenDTO.class);
             if (!qqLoginVO.getOpenId().equals(qqTokenDTO.getOpenid())) {
                 throw new BizException(QQ_LOGIN_ERROR);

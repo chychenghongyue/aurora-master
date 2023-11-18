@@ -101,5 +101,5 @@ website:
 
 qq:
   app-id: 102076958
-  check-token-url: https://graph.qq.com/oauth2.0/me?access_token={FChpjzj7zviy8Xlh}
-  user-info-url: https://graph.qq.com/user/get_user_info?openid={6BC5A1AC9A6FC0C9E5D8AC331481A831}&access_token={access_token}&oauth_consumer_key={oauth_consumer_key}
+  check-token-url: https://graph.qq.com/oauth2.0/me?access_token={access_token}
+  user-info-url: https://graph.qq.com/user/get_user_info?openid={openid}&access_token={access_token}&oauth_consumer_key={oauth_consumer_key}
