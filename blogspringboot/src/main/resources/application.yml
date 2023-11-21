@@ -51,7 +51,7 @@ spring:
   mail:
     host: smtp.163.com
     username: 13759616495@163.com
-    password: XBKSZUYROBRDNXYC  #这个是邮箱授权码
+    password: YRNVCVBDJMFKZEYR  #这个是邮箱授权码
     default-encoding: UTF-8
     protocol: smtp
     port: 465

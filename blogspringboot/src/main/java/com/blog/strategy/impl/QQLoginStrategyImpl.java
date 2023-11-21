@@ -52,7 +52,6 @@ public class QQLoginStrategyImpl extends AbstractSocialLoginStrategyImpl {
         formData.put(QQ_OPEN_ID, socialTokenDTO.getOpenId());
         formData.put(ACCESS_TOKEN, socialTokenDTO.getAccessToken());
         formData.put(OAUTH_CONSUMER_KEY, qqConfigProperties.getAppId());
-        //
         QQUserInfoDTO qqUserInfoDTO = JSON.parseObject(restTemplate.getForObject(qqConfigProperties.getUserInfoUrl(), String.class, formData.get(QQ_OPEN_ID), formData.get(ACCESS_TOKEN), formData.get(OAUTH_CONSUMER_KEY)), QQUserInfoDTO.class);
         return SocialUserInfoDTO.builder()
                 .nickname(Objects.requireNonNull(qqUserInfoDTO).getNickname())
