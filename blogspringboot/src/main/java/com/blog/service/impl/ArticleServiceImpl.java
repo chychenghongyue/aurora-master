@@ -253,6 +253,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (article.getStatus().equals(1)) {
             ArticleSearchDTO articleSearchDTO = new ArticleSearchDTO();
             BeanUtils.copyProperties(article, articleSearchDTO);
+            articleSearchDTO.setIsDelete(1);
             Map<String, Object> map = new HashMap<>();
             map.put("data", articleSearchDTO);
             map.put("info", "insertOrUpDate");

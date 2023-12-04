@@ -75,6 +75,5 @@ public class EsSearchStrategyImpl implements SearchStrategy {
         }
         return new ArrayList<>();
     }
-
 }
 

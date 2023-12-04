@@ -1,12 +1,12 @@
 package com.blog.controller;
 
 import com.blog.annotation.OptLog;
-import com.blog.model.dto.*;
 import com.blog.enums.FilePathEnum;
+import com.blog.model.dto.*;
+import com.blog.model.vo.*;
 import com.blog.service.ArticleService;
 import com.blog.strategy.context.ArticleImportStrategyContext;
 import com.blog.strategy.context.UploadStrategyContext;
-import com.blog.model.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-
 import java.util.List;
 
 import static com.blog.constant.OptTypeConstant.*;
@@ -147,7 +146,8 @@ public class ArticleController {
     @ApiOperation(value = "搜索文章")
     @GetMapping("/articles/search")
     public ResultVO<List<ArticleSearchDTO>> listArticlesBySearch(ConditionVO condition) {
-        return ResultVO.ok(articleService.listArticlesBySearch(condition));
+        List<ArticleSearchDTO> articleSearchDTOS = articleService.listArticlesBySearch(condition);
+        return ResultVO.ok(articleSearchDTOS);
     }
 
 }
