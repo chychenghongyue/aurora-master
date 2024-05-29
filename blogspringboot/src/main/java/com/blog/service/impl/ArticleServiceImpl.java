@@ -1,6 +1,9 @@
 package com.blog.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.blog.entity.Article;
 import com.blog.entity.ArticleTag;
 import com.blog.entity.Category;
@@ -23,9 +26,6 @@ import com.blog.strategy.context.UploadStrategyContext;
 import com.blog.util.BeanCopyUtil;
 import com.blog.util.PageUtil;
 import com.blog.util.UserUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.SneakyThrows;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
@@ -333,6 +333,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public List<ArticleSearchDTO> listArticlesBySearch(ConditionVO condition) {
         return searchStrategyContext.executeSearchStrategy(condition.getKeywords());
+    }
+
+    @SneakyThrows
+    @Override
+    public PageResultDTO<ArticleAdminDTO> listArticlesByUserId(ConditionVO conditionVO) {
+        //CompletableFuture<Integer> asyncCount = CompletableFuture.supplyAsync(() -> articleMapper.countArticleAdmins(conditionVO));
+        List<ArticleAdminDTO> articleAdminDTOs = articleMapper.selectByUserId(PageUtil.getLimitCurrent(), PageUtil.getSize(), conditionVO,UserUtil.getUserDetailsDTO().getUserInfoId());
+        Map<Object, Double> viewsCountMap = redisService.zAllScore(ARTICLE_VIEWS_COUNT);
+        articleAdminDTOs.forEach(item -> {
+            Double viewsCount = viewsCountMap.get(item.getId());
+            if (Objects.nonNull(viewsCount)) {
+                item.setViewsCount(viewsCount.intValue());
+            }
+        });
+        return new PageResultDTO<>(articleAdminDTOs, articleAdminDTOs.size());
     }
 
     public void updateArticleViewsCount(Integer articleId) {

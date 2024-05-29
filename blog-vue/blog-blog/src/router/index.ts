@@ -70,6 +70,21 @@ const routes = [
     path: '/:catchAll(.*)',
     redirect: '/404',
     hidden: true
+  },
+  {
+    path: '/articleManage',
+    name: 'articleManage',
+    component: () => import('../views/ArticleManage.vue')
+  },
+  {
+    path: '/articleListManage',
+    name: 'articleListManage',
+    component: () => import('../views/ArticleListManage.vue')
+  },
+  {
+    path: '/chat',
+    name: 'chat',
+    component: () => import('../views/Chat.vue')
   }
 ]
 

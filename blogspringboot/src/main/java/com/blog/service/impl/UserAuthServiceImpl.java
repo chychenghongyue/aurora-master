@@ -1,8 +1,11 @@
 package com.blog.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.blog.constant.CommonConstant;
-import com.blog.model.dto.*;
+import com.blog.entity.User;
 import com.blog.entity.UserAuth;
 import com.blog.entity.UserInfo;
 import com.blog.entity.UserRole;
@@ -11,19 +14,22 @@ import com.blog.enums.RoleEnum;
 import com.blog.exception.BizException;
 import com.blog.mapper.UserAuthMapper;
 import com.blog.mapper.UserInfoMapper;
+import com.blog.mapper.UserMapper;
 import com.blog.mapper.UserRoleMapper;
-import com.blog.service.blogInfoService;
+import com.blog.model.dto.*;
+import com.blog.model.vo.ConditionVO;
+import com.blog.model.vo.PasswordVO;
+import com.blog.model.vo.QQLoginVO;
+import com.blog.model.vo.UserVO;
 import com.blog.service.RedisService;
 import com.blog.service.TokenService;
 import com.blog.service.UserAuthService;
+import com.blog.service.blogInfoService;
 import com.blog.strategy.context.SocialLoginStrategyContext;
 import com.blog.util.PageUtil;
 import com.blog.util.UserUtil;
-import com.blog.model.vo.*;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -43,7 +49,11 @@ import static com.blog.util.CommonUtil.getRandomCode;
 
 
 @Service
+@Slf4j
 public class UserAuthServiceImpl implements UserAuthService {
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private UserAuthMapper userAuthMapper;
@@ -130,6 +140,7 @@ public class UserAuthServiceImpl implements UserAuthService {
                 .avatar(blogInfoService.getWebsiteConfig().getUserAvatar())
                 .build();
         userInfoMapper.insert(userInfo);
+        log.error("info:{}",userInfo.getId());
         UserRole userRole = UserRole.builder()
                 .userId(userInfo.getId())
                 .roleId(RoleEnum.USER.getRoleId())
@@ -142,6 +153,15 @@ public class UserAuthServiceImpl implements UserAuthService {
                 .loginType(LoginTypeEnum.EMAIL.getType())
                 .build();
         userAuthMapper.insert(userAuth);
+        User user = User.builder()
+                .id(userInfo.getId())
+                .password("66ce2829f028ecd01cf1553172e347c5")
+                .email(userVO.getUsername())
+                .nickName(CommonConstant.DEFAULT_NICKNAME + IdWorker.getId())
+                .avatar(blogInfoService.getWebsiteConfig().getUserAvatar())
+                .name(userVO.getUsername())
+                .build();
+        userMapper.insert(user);
     }
 
     @Override

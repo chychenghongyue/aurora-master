@@ -38,7 +38,6 @@ public class UserAuthController {
     public ResultVO<List<UserAreaDTO>> listUserAreas(ConditionVO conditionVO) {
         return ResultVO.ok(userAuthService.listUserAreas(conditionVO));
     }
-
     @ApiOperation(value = "查询后台用户列表")
     @GetMapping("/admin/users")
     public ResultVO<PageResultDTO<UserAdminDTO>> listUsers(ConditionVO conditionVO) {

@@ -28,7 +28,7 @@
     "mitt": "^3.0.0",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
-    "pinia": "^2.0.14",
+    "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^1.6.3",
     "postcss-loader": "^7.0.1",
     "prismjs": "^1.28.0",
@@ -36,11 +36,12 @@
     "v3-img-preview": "^1.1.16",
     "vue-avatar-cropper": "^6.0.9",
     "vue-axios": "^3.4.1",
-    "vue-i18n": "^9.1.10",
+    "vue-i18n": "^9.13.1",
     "vue-router": "^4.0.3",
     "vue3-click-away": "^1.2.4",
     "vue3-infinite-scroll-better": "^2.2.0",
     "vue3-lazy": "^1.0.0-alpha.1"
+
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^3.0.0",
@@ -56,6 +57,7 @@
     "babel-plugin-prismjs": "^2.1.0",
     "postcss": "^7.0.35",
     "sass-loader": "^10.1.1",
+    "sass": "1.77.2",
     "scp2": "^0.5.0",
     "svg-sprite-loader": "^6.0.11",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@2.1.2",

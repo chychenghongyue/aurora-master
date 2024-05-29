@@ -46,7 +46,7 @@ public class TagController {
     }
 
     @ApiOperation(value = "搜索文章标签")
-    @GetMapping("/admin/tags/search")
+    @GetMapping({"/admin/tags/search","/tags/search"})
     public ResultVO<List<TagAdminDTO>> listTagsAdminBySearch(ConditionVO condition) {
         return ResultVO.ok(tagService.listTagsAdminBySearch(condition));
     }

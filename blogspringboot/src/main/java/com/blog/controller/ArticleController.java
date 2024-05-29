@@ -33,7 +33,7 @@ public class ArticleController {
     private ArticleImportStrategyContext articleImportStrategyContext;
 
     @ApiOperation("获取置顶和推荐文章")
-    @GetMapping("/articles/topAndFeatured")
+    @GetMapping({"/articles/topAndFeatured","/articles/export"})
     public ResultVO<TopAndFeaturedArticlesDTO> listTopAndFeaturedArticles() {
         return ResultVO.ok(articleService.listTopAndFeaturedArticles());
     }
@@ -80,6 +80,11 @@ public class ArticleController {
     public ResultVO<PageResultDTO<ArticleAdminDTO>> listArticlesAdmin(ConditionVO conditionVO) {
         return ResultVO.ok(articleService.listArticlesAdmin(conditionVO));
     }
+    @ApiOperation("获取个人文章")
+    @GetMapping("/articles")
+    public ResultVO<PageResultDTO<ArticleAdminDTO>> listArticlesByUserId(ConditionVO conditionVO) {
+        return ResultVO.ok(articleService.listArticlesByUserId(conditionVO));
+    }
 
     @OptLog(optType = SAVE_OR_UPDATE)
     @ApiOperation("保存和修改文章")
@@ -106,7 +111,7 @@ public class ArticleController {
 
     @OptLog(optType = DELETE)
     @ApiOperation(value = "物理删除文章")
-    @DeleteMapping("/admin/articles/delete")
+    @DeleteMapping({"/admin/articles/delete","/articles/delete"})
     public ResultVO<?> deleteArticles(@RequestBody List<Integer> articleIds) {
         articleService.deleteArticles(articleIds);
         return ResultVO.ok();
@@ -129,7 +134,7 @@ public class ArticleController {
 
     @OptLog(optType = UPLOAD)
     @ApiOperation(value = "导入文章")
-    @PostMapping("/admin/articles/import")
+    @PostMapping({"/admin/articles/import","/articles/import"})
     public ResultVO<?> importArticles(MultipartFile file, @RequestParam(required = false) String type) {
         articleImportStrategyContext.importArticles(file, type);
         return ResultVO.ok();
@@ -138,7 +143,7 @@ public class ArticleController {
     @OptLog(optType = EXPORT)
     @ApiOperation(value = "导出文章")
     @ApiImplicitParam(name = "articleIdList", value = "文章id", required = true, dataType = "List<Integer>")
-    @PostMapping("/admin/articles/export")
+    @PostMapping({"/admin/articles/export","/articles/export"})
     public ResultVO<List<String>> exportArticles(@RequestBody List<Integer> articleIds) {
         return ResultVO.ok(articleService.exportArticles(articleIds));
     }

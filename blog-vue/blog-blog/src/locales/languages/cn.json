@@ -69,6 +69,7 @@
     "login":"登录",
     "logout":"登出",
     "personal-center":"个人中心",
+    "articleManagement": "文章管理",
     "running-time":"运行时间",
     "view-count":"总访问量"
   }

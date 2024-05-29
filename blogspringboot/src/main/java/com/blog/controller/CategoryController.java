@@ -39,7 +39,7 @@ public class CategoryController {
     }
 
     @ApiOperation(value = "搜索文章分类")
-    @GetMapping("/admin/categories/search")
+    @GetMapping({"/admin/categories/search","/categories/search"})
     public ResultVO<List<CategoryOptionDTO>> listCategoriesAdminBySearch(ConditionVO conditionVO) {
         return ResultVO.ok(categoryService.listCategoriesBySearch(conditionVO));
     }

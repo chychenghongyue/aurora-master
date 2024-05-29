@@ -1,9 +1,9 @@
 package com.blog.service.impl;
 
-import com.blog.model.dto.PageResultDTO;
-import com.blog.model.dto.UserDetailsDTO;
-import com.blog.model.dto.UserInfoDTO;
-import com.blog.model.dto.UserOnlineDTO;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.blog.entity.User;
 import com.blog.entity.UserAuth;
 import com.blog.entity.UserInfo;
 import com.blog.entity.UserRole;
@@ -11,6 +11,12 @@ import com.blog.enums.FilePathEnum;
 import com.blog.exception.BizException;
 import com.blog.mapper.UserAuthMapper;
 import com.blog.mapper.UserInfoMapper;
+import com.blog.mapper.UserMapper;
+import com.blog.model.dto.PageResultDTO;
+import com.blog.model.dto.UserDetailsDTO;
+import com.blog.model.dto.UserInfoDTO;
+import com.blog.model.dto.UserOnlineDTO;
+import com.blog.model.vo.*;
 import com.blog.service.RedisService;
 import com.blog.service.TokenService;
 import com.blog.service.UserInfoService;
@@ -18,9 +24,6 @@ import com.blog.service.UserRoleService;
 import com.blog.strategy.context.UploadStrategyContext;
 import com.blog.util.BeanCopyUtil;
 import com.blog.util.UserUtil;
-import com.blog.model.vo.*;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +41,8 @@ import static com.blog.util.PageUtil.getSize;
 @Service
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements UserInfoService {
 
+    @Autowired
+    private UserMapper userMapper;
     @Autowired
     private UserInfoMapper userInfoMapper;
 
@@ -67,9 +72,15 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
                 .website(userInfoVO.getWebsite())
                 .build();
         userInfoMapper.updateById(userInfo);
+        User user=User.builder()
+                .id(UserUtil.getUserDetailsDTO().getUserInfoId())
+                .nickName(userInfoVO.getNickname())
+                .build();
+        userMapper.updateById(user);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String updateUserAvatar(MultipartFile file) {
         String avatar = uploadStrategyContext.executeUploadStrategy(file, FilePathEnum.AVATAR.getPath());
         UserInfo userInfo = UserInfo.builder()
@@ -77,6 +88,11 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
                 .avatar(avatar)
                 .build();
         userInfoMapper.updateById(userInfo);
+        User user = User.builder()
+                .id(UserUtil.getUserDetailsDTO().getUserInfoId())
+                .avatar(avatar)
+                .build();
+        userMapper.updateById(user);
         return avatar;
     }
 
@@ -94,6 +110,14 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
                 .email(emailVO.getEmail())
                 .build();
         userInfoMapper.updateById(userInfo);
+        User user = User.builder()
+                .id(UserUtil.getUserDetailsDTO().getUserInfoId())
+                .email(emailVO.getEmail())
+                .build();
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id", user.getId());
+        updateWrapper.set("email", user.getEmail());
+        userMapper.update(user, updateWrapper);
     }
 
     @Transactional(rollbackFor = Exception.class)

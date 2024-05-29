@@ -40,4 +40,5 @@ public interface ArticleService extends IService<Article> {
 
     List<ArticleSearchDTO> listArticlesBySearch(ConditionVO condition);
 
+    PageResultDTO<ArticleAdminDTO> listArticlesByUserId(ConditionVO conditionVO);
 }

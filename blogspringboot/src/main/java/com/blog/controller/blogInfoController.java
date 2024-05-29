@@ -47,7 +47,7 @@ public class blogInfoController {
     }
 
     @ApiOperation(value = "获取系统后台信息")
-    @GetMapping("/admin")
+    @GetMapping({"/admin","/info"})
     public ResultVO<BlogAdminInfoDTO> getBlogBackInfo() {
         return ResultVO.ok(blogInfoService.getblogAdminInfo());
     }

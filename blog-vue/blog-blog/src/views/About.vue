@@ -63,10 +63,11 @@ import api from '@/api/api'
 import emitter from '@/utils/mitt'
 import { v3ImgPreviewFn } from 'v3-img-preview'
 import markdownToHtml from '@/utils/markdown'
+import ObSkeleton from "@/components/LoadingSkeleton/src/Skeleton.vue";
 
 export default defineComponent({
   name: 'About',
-  components: { Breadcrumb, Sidebar, Profile, Navigator, Sticky, SubTitle, Comment },
+  components: {ObSkeleton, Breadcrumb, Sidebar, Profile, Navigator, Sticky, SubTitle, Comment },
   setup() {
     const commonStore = useCommonStore()
     const commentStore = useCommentStore()
