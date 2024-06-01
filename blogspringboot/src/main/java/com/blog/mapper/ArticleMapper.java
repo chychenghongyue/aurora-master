@@ -1,12 +1,12 @@
 package com.blog.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.blog.entity.Article;
 import com.blog.model.dto.ArticleAdminDTO;
 import com.blog.model.dto.ArticleCardDTO;
 import com.blog.model.dto.ArticleDTO;
 import com.blog.model.dto.ArticleStatisticsDTO;
-import com.blog.entity.Article;
 import com.blog.model.vo.ConditionVO;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -38,10 +38,12 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
     Integer countArticleAdmins(@Param("conditionVO") ConditionVO conditionVO);
 
+    Integer countArticleById(@Param("conditionVO") ConditionVO conditionVO, @Param("userId") int userId);
+
     List<ArticleAdminDTO> listArticlesAdmin(@Param("current") Long current, @Param("size") Long size, @Param("conditionVO") ConditionVO conditionVO);
 
     List<ArticleStatisticsDTO> listArticleStatistics();
 
-    List<ArticleAdminDTO> selectByUserId(@Param("current") Long current, @Param("size") Long size, @Param("conditionVO") ConditionVO conditionVO,@Param("userId")int userId);
+    List<ArticleAdminDTO> selectByUserId(@Param("current") Long current, @Param("size") Long size, @Param("conditionVO") ConditionVO conditionVO, @Param("userId") int userId);
 }
 

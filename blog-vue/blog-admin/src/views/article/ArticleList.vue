@@ -195,10 +195,11 @@
       :current-page="current"
       :page-size="size"
       :total="count"
-      :page-sizes="[10, 20]"
+      :page-sizes="[5, 10, 20]"
       layout="total, sizes, prev, pager, next, jumper" />
     <el-dialog :visible.sync="updateIsDelete" width="30%">
-      <div class="dialog-title-container" slot="title"><i class="el-icon-warning" style="color: #ff9900" />提示</div>
+      <div class="dialog-title-container" slot="title">
+        <i class="el-icon-warning" style="color: #ff9900" />提示</div>
       <div style="font-size: 1rem">是否删除选中项？</div>
       <div slot="footer">
         <el-button @click="updateIsDelete = false">取 消</el-button>

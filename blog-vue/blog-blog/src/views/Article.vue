@@ -166,10 +166,11 @@ import emitter from '@/utils/mitt'
 import { v3ImgPreviewFn } from 'v3-img-preview'
 import api from '@/api/api'
 import markdownToHtml from '@/utils/markdown'
+import ObSkeleton from "@/components/LoadingSkeleton/src/Skeleton.vue";
 
 export default defineComponent({
   name: 'Article',
-  components: { Sidebar, Comment, SubTitle, ArticleCard, Profile, Sticky, Navigator },
+  components: {ObSkeleton, Sidebar, Comment, SubTitle, ArticleCard, Profile, Sticky, Navigator },
   setup() {
     const proxy: any = getCurrentInstance()?.appContext.config.globalProperties
     const commonStore = useCommonStore()
@@ -275,6 +276,8 @@ export default defineComponent({
     const fetchArticle = () => {
       loading.value = true
       api.getArticeById(reactiveData.articleId).then(({ data }) => {
+        console.error("验证码")
+        console.error(data)
         if (data.code === 52003) {
           proxy.$notify({
             title: 'Error',
@@ -330,6 +333,13 @@ export default defineComponent({
         size: pageInfo.size
       }
       api.getComments(params).then(({ data }) => {
+        console.error("getComments")
+        console.error(params)
+        console.error(data)
+        if (!data.data || !Array.isArray(data.data.records)) {
+          console.warn('data.data.records 为空或未定义');
+          return;
+        }
         if (reactiveData.isReload) {
           reactiveData.comments = data.data.records
           reactiveData.isReload = false

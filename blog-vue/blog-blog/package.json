@@ -1,5 +1,5 @@
 {
-  "name": "aurora-blog",
+  "name": "blog-blog",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -12,7 +12,7 @@
     "@iktakahiro/markdown-it-katex": "^4.0.1",
     "axios": "^0.27.2",
     "core-js": "^3.8.3",
-    "element-plus": "^2.2.9",
+    "element-plus": "^2.7.4",
     "js-cookie": "^3.0.1",
     "markdown-it": "^13.0.1",
     "markdown-it-abbr": "^1.0.4",
@@ -40,8 +40,9 @@
     "vue-router": "^4.0.3",
     "vue3-click-away": "^1.2.4",
     "vue3-infinite-scroll-better": "^2.2.0",
-    "vue3-lazy": "^1.0.0-alpha.1"
-
+    "vue3-lazy": "^1.0.0-alpha.1",
+    "image-conversion": "^2.1.1",
+    "vue": "^3.4.27"
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^3.0.0",

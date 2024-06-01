@@ -14,20 +14,11 @@ export default {
       children: []
     },
     {
-      name: 'Talks',
-      path: '/talks',
+      name: 'Tags',
+      path: '/tags',
       i18n: {
-        cn: '说说',
-        en: 'talks'
-      },
-      children: []
-    },
-    {
-      name: 'About',
-      path: '/about',
-      i18n: {
-        cn: '关于',
-        en: 'About'
+        cn: '标签',
+        en: 'Tags'
       },
       children: []
     },
@@ -41,31 +32,40 @@ export default {
       children: []
     },
     {
-      name: 'Tags',
-      path: '/tags',
+      name: 'Talks',
+      path: '/talks',
       i18n: {
-        cn: '标签',
-        en: 'Tags'
+        cn: '公告',
+        en: 'announcement'
       },
       children: []
     },
-    {
-      name: 'Message',
-      path: '/message',
-      i18n: {
-        cn: '留言',
-        en: 'Message'
-      },
-      children: []
-    },
-    {
-      name: 'Friends',
-      path: '/friends',
-      i18n: {
-        cn: '友链',
-        en: 'Friends'
-      },
-      children: []
-    }
+    // {
+    //   name: 'About',
+    //   path: '/about',
+    //   i18n: {
+    //     cn: '关于',
+    //     en: 'About'
+    //   },
+    //   children: []
+    // },
+    // {
+    //   name: 'Message',
+    //   path: '/message',
+    //   i18n: {
+    //     cn: '留言',
+    //     en: 'Message'
+    //   },
+    //   children: []
+    // },
+    // {
+    //   name: 'Friends',
+    //   path: '/friends',
+    //   i18n: {
+    //     cn: '友链',
+    //     en: 'Friends'
+    //   },
+    //   children: []
+    // }
   ]
 }

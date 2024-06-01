@@ -140,7 +140,7 @@ public class UserAuthServiceImpl implements UserAuthService {
                 .avatar(blogInfoService.getWebsiteConfig().getUserAvatar())
                 .build();
         userInfoMapper.insert(userInfo);
-        log.error("info:{}",userInfo.getId());
+        log.error("info:{}", userInfo.getId());
         UserRole userRole = UserRole.builder()
                 .userId(userInfo.getId())
                 .roleId(RoleEnum.USER.getRoleId())

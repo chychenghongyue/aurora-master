@@ -2,16 +2,16 @@
   <div id="App-Wrapper" :class="[appWrapperClass, theme]" :style="wrapperStyle">
     <div
         id="App-Container"
+        :style="cssVariables"
         class="app-container max-w-10/12 lg:max-w-screen-2xl px-3 lg:px-8"
-        @keydown.meta.k.stop.prevent=""
         tabindex="-1"
-        :style="cssVariables">
+        @keydown.meta.k.stop.prevent="">
       <HeaderMain/>
-      <div class="app-banner app-banner-image" :style="headerImage"/>
-      <div class="app-banner app-banner-screen" :style="headerBaseBackground"/>
+      <div :style="headerImage" class="app-banner app-banner-image"/>
+      <div :style="headerBaseBackground" class="app-banner app-banner-screen"/>
       <div class="relative z-10">
         <router-view v-slot="{ Component }">
-          <transition name="fade-slide-y" mode="out-in">
+          <transition mode="out-in" name="fade-slide-y">
             <component :is="Component"/>
           </transition>
         </router-view>
@@ -20,7 +20,7 @@
     <div id="loading-bar-wrapper" :class="loadingBarClass"></div>
   </div>
   <Footer id="footer" :style="cssVariables"/>
-  <div class="App-Mobile-sidebar" v-if="isMobile">
+  <div v-if="isMobile" class="App-Mobile-sidebar">
     <div id="App-Mobile-Profile" class="App-Mobile-wrapper">
       <MobileMenu/>
     </div>
@@ -45,7 +45,6 @@ import Dia from '@/components/Dia.vue'
 import AuroraNavigator from '@/components/AuroraNavigator.vue'
 import UserCenter from '@/components/UserCenter.vue'
 import api from './api/api'
-import ArticleListManage from "@/views/ArticleListManage.vue";
 
 
 export default defineComponent({
@@ -57,8 +56,7 @@ export default defineComponent({
     Dia,
     AuroraNavigator,
     MobileMenu,
-    UserCenter,
-    ArticleListManage
+    UserCenter
   },
   setup() {
     const appStore = useAppStore()

@@ -14,7 +14,7 @@
       <el-button type="danger" size="medium" @click="openModel" style="margin-left: 10px"> 发布文章 </el-button>
     </div>
     <mavon-editor ref="md" v-model="article.articleContent" @imgAdd="uploadImg" style="height: calc(100vh - 260px)" />
-    <el-dialog :visible.sync="addOrEdit" width="40%" top="3vh">
+    <el-dialog :visible.sync="addOrEdit" width="40%" top="3vh" class="el-dialog__wrapper">
       <div class="dialog-title-container" slot="title">发布文章</div>
       <el-form label-width="80px" size="medium" :model="article">
         <el-form-item label="文章分类">
@@ -57,7 +57,7 @@
             @close="removeTag(item)">
             {{ item }}
           </el-tag>
-          <el-popover placement="bottom-start" width="460" trigger="click" v-if="article.tagNames.length < 3">
+          <el-popover placement="bottom-start" width="460" trigger="click" v-if="article.tagNames.size < 3">
             <div class="popover-title">标签</div>
             <el-autocomplete
               style="width: 100%"
@@ -148,6 +148,7 @@ export default {
     const articleId = arr[2]
     if (articleId) {
       this.axios.get('/api/admin/articles/' + articleId).then(({ data }) => {
+        console.log(this.article);
         this.article = data.data
       })
     } else {
@@ -334,6 +335,7 @@ export default {
         this.article.id != null
       ) {
         this.axios.post('/api/admin/articles', this.article).then(({ data }) => {
+          console.log(this.article)
           if (data.flag) {
             this.$notify.success({
               title: '成功',

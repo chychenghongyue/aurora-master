@@ -21,8 +21,8 @@ html {
 }
 .pagination-container {
   float: right;
-  margin-top: 1.25rem;
-  margin-bottom: 1.25rem;
+
+  margin: 3rem auto;
 }
 .dialog-title-container {
   display: flex;

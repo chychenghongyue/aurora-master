@@ -238,6 +238,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         });
         return new PageResultDTO<>(articleAdminDTOs, asyncCount.get());
     }
+    @SneakyThrows
+    @Override
+    public PageResultDTO<ArticleAdminDTO> listArticlesByUserId(ConditionVO conditionVO) {
+        int userId =UserUtil.getUserDetailsDTO().getUserInfoId();
+        CompletableFuture<Integer> asyncCount = CompletableFuture.supplyAsync(() -> articleMapper.countArticleById(conditionVO, userId));
+        List<ArticleAdminDTO> articleAdminDTOs = articleMapper.selectByUserId(PageUtil.getLimitCurrent(), PageUtil.getSize(), conditionVO, UserUtil.getUserDetailsDTO().getUserInfoId());
+        Map<Object, Double> viewsCountMap = redisService.zAllScore(ARTICLE_VIEWS_COUNT);
+        articleAdminDTOs.forEach(item -> {
+            Double viewsCount = viewsCountMap.get(item.getId());
+            if (Objects.nonNull(viewsCount)) {
+                item.setViewsCount(viewsCount.intValue());
+            }
+        });
+        return new PageResultDTO<>(articleAdminDTOs, asyncCount.get());
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -335,20 +350,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         return searchStrategyContext.executeSearchStrategy(condition.getKeywords());
     }
 
-    @SneakyThrows
-    @Override
-    public PageResultDTO<ArticleAdminDTO> listArticlesByUserId(ConditionVO conditionVO) {
-        //CompletableFuture<Integer> asyncCount = CompletableFuture.supplyAsync(() -> articleMapper.countArticleAdmins(conditionVO));
-        List<ArticleAdminDTO> articleAdminDTOs = articleMapper.selectByUserId(PageUtil.getLimitCurrent(), PageUtil.getSize(), conditionVO,UserUtil.getUserDetailsDTO().getUserInfoId());
-        Map<Object, Double> viewsCountMap = redisService.zAllScore(ARTICLE_VIEWS_COUNT);
-        articleAdminDTOs.forEach(item -> {
-            Double viewsCount = viewsCountMap.get(item.getId());
-            if (Objects.nonNull(viewsCount)) {
-                item.setViewsCount(viewsCount.intValue());
-            }
-        });
-        return new PageResultDTO<>(articleAdminDTOs, articleAdminDTOs.size());
-    }
 
     public void updateArticleViewsCount(Integer articleId) {
         redisService.zIncr(ARTICLE_VIEWS_COUNT, articleId, 1D);
