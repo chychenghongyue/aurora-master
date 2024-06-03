@@ -600,7 +600,6 @@
         is_top DESC,
         is_featured DESC,
         id DESC
-        LIMIT #{current},#{size}
         ) a
         LEFT JOIN t_category c ON a.category_id = c.id
         LEFT JOIN t_article_tag at ON a.id = at.article_id

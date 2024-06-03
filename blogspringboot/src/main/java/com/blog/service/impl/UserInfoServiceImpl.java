@@ -1,6 +1,7 @@
 package com.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.blog.entity.User;
@@ -72,7 +73,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
                 .website(userInfoVO.getWebsite())
                 .build();
         userInfoMapper.updateById(userInfo);
-        User user=User.builder()
+        User user = User.builder()
                 .id(UserUtil.getUserDetailsDTO().getUserInfoId())
                 .nickName(userInfoVO.getNickname())
                 .build();
@@ -111,7 +112,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
                 .build();
         userInfoMapper.updateById(userInfo);
         User user = User.builder()
-                .id(UserUtil.getUserDetailsDTO().getUserInfoId())
+                .id(UserUtil.getUserDetailsDTO().getId())
                 .email(emailVO.getEmail())
                 .build();
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
@@ -195,4 +196,28 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         return BeanCopyUtil.copyObject(userInfo, UserInfoDTO.class);
     }
 
+    @Override
+    public PageResultDTO<UserInfoDTO> selectAll(ConditionVO conditionVO) {
+        System.err.println(conditionVO);
+        QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
+        Integer count = userInfoMapper.selectCount(queryWrapper);
+        int current = conditionVO.getCurrent().intValue();
+        int size = conditionVO.getSize().intValue();
+        int fromIndex = (current - 1) * size;
+        queryWrapper.last("limit" + " " + fromIndex + "," + conditionVO.getSize());
+        List<UserInfo> userInfos = userInfoMapper.selectList(queryWrapper);
+        List<UserInfoDTO> userInfoDTOS = new ArrayList<>();
+        if (count != 0) {
+            for (UserInfo userInfo : userInfos) {
+                UserInfoDTO build = UserInfoDTO.builder()
+                        .id(userInfo.getId())
+                        .email(userInfo.getEmail())
+                        .nickname(userInfo.getNickname())
+                        .avatar(userInfo.getAvatar())
+                        .build();
+                userInfoDTOS.add(build);
+            }
+        }
+        return new PageResultDTO<>(userInfoDTOS, count);
+    }
 }

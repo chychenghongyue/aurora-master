@@ -2,19 +2,14 @@ package com.blog.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.blog.entity.Article;
-import com.blog.entity.ArticleTag;
-import com.blog.entity.Category;
-import com.blog.entity.Tag;
+import com.blog.entity.*;
 import com.blog.enums.FileExtEnum;
 import com.blog.enums.FilePathEnum;
 import com.blog.exception.BizException;
-import com.blog.mapper.ArticleMapper;
-import com.blog.mapper.ArticleTagMapper;
-import com.blog.mapper.CategoryMapper;
-import com.blog.mapper.TagMapper;
+import com.blog.mapper.*;
 import com.blog.model.dto.*;
 import com.blog.model.vo.*;
 import com.blog.service.ArticleService;
@@ -53,6 +48,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Autowired
     private ArticleMapper articleMapper;
+    @Autowired
+    private UserArticleMapper userArticleMapper;
 
     @Autowired
     private ArticleTagMapper articleTagMapper;
@@ -238,20 +235,57 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         });
         return new PageResultDTO<>(articleAdminDTOs, asyncCount.get());
     }
+
     @SneakyThrows
     @Override
     public PageResultDTO<ArticleAdminDTO> listArticlesByUserId(ConditionVO conditionVO) {
-        int userId =UserUtil.getUserDetailsDTO().getUserInfoId();
+        int userId = UserUtil.getUserDetailsDTO().getId();
+        System.err.println("userId"+userId);
         CompletableFuture<Integer> asyncCount = CompletableFuture.supplyAsync(() -> articleMapper.countArticleById(conditionVO, userId));
-        List<ArticleAdminDTO> articleAdminDTOs = articleMapper.selectByUserId(PageUtil.getLimitCurrent(), PageUtil.getSize(), conditionVO, UserUtil.getUserDetailsDTO().getUserInfoId());
+        List<ArticleAdminDTO> articleAdminDTOs = articleMapper.selectByUserId(conditionVO, userId);
         Map<Object, Double> viewsCountMap = redisService.zAllScore(ARTICLE_VIEWS_COUNT);
+        System.err.println("articleAdminDTOs"+articleAdminDTOs);
+
+        QueryWrapper<UserArticle> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", userId);
+        List<UserArticle> userArticles = userArticleMapper.selectList(queryWrapper);
+        int count = userArticles.size() + asyncCount.get();
+        System.err.println("userArticles" + userArticles);
         articleAdminDTOs.forEach(item -> {
+            item.setUserId(userId);
             Double viewsCount = viewsCountMap.get(item.getId());
             if (Objects.nonNull(viewsCount)) {
                 item.setViewsCount(viewsCount.intValue());
             }
         });
-        return new PageResultDTO<>(articleAdminDTOs, asyncCount.get());
+        List<Article> articles = new ArrayList<>();
+        if (!userArticles.isEmpty()) {
+            userArticles.forEach(item -> {
+                Article article = articleMapper.selectById(item.getArticleId());
+                article.setUserId(item.getCreatId());
+                articles.add(article);
+            });
+            System.err.println("articles" + articles);
+            if (!articles.isEmpty()) {
+                for (Article item : articles) {
+                    articleAdminDTOs.add(ArticleAdminDTO.builder()
+                            .id(item.getId())
+                            .userId(item.getUserId())
+                            .status(item.getStatus())
+                            .type(item.getType())
+                            .articleTitle(item.getArticleTitle())
+                            .isDelete(item.getIsDelete())
+                            .createTime(item.getCreateTime())
+                            .articleCover(item.getArticleCover())
+                            .build());
+                }
+            }
+        }
+        int currentPage = (conditionVO.getCurrent().intValue() - 1) * conditionVO.getSize().intValue();
+        int sizeTemp = conditionVO.getSize().intValue();
+        int size = Math.min(currentPage + sizeTemp, articleAdminDTOs.size());
+        List<ArticleAdminDTO> articleAdminPage = new ArrayList<>(articleAdminDTOs.subList(currentPage, size));
+        return new PageResultDTO<>(articleAdminPage, count);
     }
 
     @Override
@@ -262,7 +296,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (Objects.nonNull(category)) {
             article.setCategoryId(category.getId());
         }
-        article.setUserId(UserUtil.getUserDetailsDTO().getUserInfoId());
+        article.setUserId(UserUtil.getUserDetailsDTO().getId());
         this.saveOrUpdate(article);
         saveArticleTag(articleVO, article.getId());
         if (article.getStatus().equals(1)) {

@@ -82,7 +82,7 @@ public class TalkServiceImpl extends ServiceImpl<TalkMapper, Talk> implements Ta
     @Override
     public void saveOrUpdateTalk(TalkVO talkVO) {
         Talk talk = BeanCopyUtil.copyObject(talkVO, Talk.class);
-        talk.setUserId(UserUtil.getUserDetailsDTO().getUserInfoId());
+        talk.setUserId(UserUtil.getUserDetailsDTO().getId());
         this.saveOrUpdate(talk);
     }
 

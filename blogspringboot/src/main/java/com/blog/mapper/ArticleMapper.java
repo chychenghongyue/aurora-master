@@ -44,6 +44,6 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
     List<ArticleStatisticsDTO> listArticleStatistics();
 
-    List<ArticleAdminDTO> selectByUserId(@Param("current") Long current, @Param("size") Long size, @Param("conditionVO") ConditionVO conditionVO, @Param("userId") int userId);
+    List<ArticleAdminDTO> selectByUserId(@Param("conditionVO") ConditionVO conditionVO, @Param("userId") int userId);
 }
 

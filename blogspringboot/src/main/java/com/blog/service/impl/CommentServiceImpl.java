@@ -84,7 +84,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         Integer isCommentReview = websiteConfig.getIsCommentReview();
         commentVO.setCommentContent(HTMLUtil.filter(commentVO.getCommentContent()));
         Comment comment = Comment.builder()
-                .userId(UserUtil.getUserDetailsDTO().getUserInfoId())
+                .userId(UserUtil.getUserDetailsDTO().getId())
                 .replyUserId(commentVO.getReplyUserId())
                 .topicId(commentVO.getTopicId())
                 .commentContent(commentVO.getCommentContent())

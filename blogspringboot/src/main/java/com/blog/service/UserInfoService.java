@@ -1,11 +1,11 @@
 package com.blog.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.blog.entity.UserInfo;
 import com.blog.model.dto.PageResultDTO;
 import com.blog.model.dto.UserInfoDTO;
 import com.blog.model.dto.UserOnlineDTO;
-import com.blog.entity.UserInfo;
 import com.blog.model.vo.*;
-import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserInfoService extends IService<UserInfo> {
@@ -28,4 +28,5 @@ public interface UserInfoService extends IService<UserInfo> {
 
     UserInfoDTO getUserInfoById(Integer id);
 
+    PageResultDTO<UserInfoDTO> selectAll(ConditionVO conditionVO);
 }

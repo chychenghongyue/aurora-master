@@ -42,7 +42,8 @@
     "vue3-infinite-scroll-better": "^2.2.0",
     "vue3-lazy": "^1.0.0-alpha.1",
     "image-conversion": "^2.1.1",
-    "vue": "^3.4.27"
+    "vue": "^3.4.27",
+    "wiz-editor": "^0.0.428"
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^3.0.0",

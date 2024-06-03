@@ -4,8 +4,8 @@ import com.blog.annotation.OptLog;
 import com.blog.model.dto.PageResultDTO;
 import com.blog.model.dto.UserInfoDTO;
 import com.blog.model.dto.UserOnlineDTO;
-import com.blog.service.UserInfoService;
 import com.blog.model.vo.*;
+import com.blog.service.UserInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -93,4 +93,9 @@ public class UserInfoController {
         return ResultVO.ok(userInfoService.getUserInfoById(userInfoId));
     }
 
+    @GetMapping("/userAll")
+    public ResultVO<PageResultDTO<UserInfoDTO>> getUserInfo(ConditionVO conditionVO) {
+        PageResultDTO<UserInfoDTO> userInfoDTOPageResultDTO = userInfoService.selectAll(conditionVO);
+        return ResultVO.ok(userInfoDTOPageResultDTO);
+    }
 }

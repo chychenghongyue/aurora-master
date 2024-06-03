@@ -51,9 +51,9 @@ export default defineComponent({
   name: 'App',
   components: {
     HeaderMain,
-    Footer,
+    // Footer,
     // 小机器人
-    Dia,
+    // Dia,
     AuroraNavigator,
     MobileMenu,
     UserCenter
