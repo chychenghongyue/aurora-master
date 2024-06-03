@@ -6,7 +6,7 @@
       <span @click="changeStatus('all')" :class="isActive('all')">全部</span>
       <span @click="changeStatus('public')" :class="isActive('public')"> 公开 </span>
       <span @click="changeStatus('private')" :class="isActive('private')"> 私密 </span>
-      <span @click="changeStatus('draft')" :class="isActive('draft')"> 草稿箱 </span>
+      <span @click="changeStatus('team')" :class="isActive('team')"> 团队 </span>
       <span @click="changeStatus('delete')" :class="isActive('delete')"> 回收站 </span>
     </div>
     <div class="operation-container">
@@ -404,7 +404,7 @@ export default {
           this.isDelete = 0
           this.status = 2
           break
-        case 'draft':
+        case 'team':
           this.isDelete = 0
           this.status = 3
           break
