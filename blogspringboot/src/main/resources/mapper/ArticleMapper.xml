@@ -24,6 +24,7 @@
     </resultMap>
     <resultMap id="ArticleDTOResultMap" type="com.blog.model.dto.ArticleDTO">
         <id property="id" column="id"/>
+        <id property="userId" column="user_id"/>
         <result property="articleCover" column="article_cover"/>
         <result property="articleTitle" column="article_title"/>
         <result property="articleContent" column="article_content"/>
@@ -141,6 +142,7 @@
     </select>
     <select id="getArticlesByCategoryId" resultMap="ArticleCardDTOResultMap">
         SELECT a.id                            AS id,
+               user_id,
                article_cover,
                article_title,
                if(article_abstract is null or article_abstract = '', SUBSTR(article_content, 1, 500), article_abstract) AS article_content,
@@ -181,6 +183,7 @@
     </select>
     <select id="getArticleById" resultMap="ArticleDTOResultMap">
         SELECT a.id            AS id,
+               user_id,
                article_cover,
                article_title,
                article_content,
@@ -222,6 +225,7 @@
     </select>
     <select id="getPreArticleById" resultMap="ArticleCardDTOResultMap">
         SELECT a.id                            AS id,
+               user_id,
                article_cover,
                article_title,
                if(article_abstract is null or article_abstract = '', SUBSTR(article_content, 1, 500), article_abstract) AS article_content,
@@ -262,6 +266,7 @@
     </select>
     <select id="getNextArticleById" resultMap="ArticleCardDTOResultMap">
         SELECT a.id                            AS id,
+               user_id,
                article_cover,
                article_title,
                if(article_abstract is null or article_abstract = '', SUBSTR(article_content, 1, 500), article_abstract) AS article_content,
@@ -302,6 +307,7 @@
     </select>
     <select id="getFirstArticle" resultMap="ArticleCardDTOResultMap">
         SELECT a.id                            AS id,
+               user_id,
                article_cover,
                article_title,
                if(article_abstract is null or article_abstract = '', SUBSTR(article_content, 1, 500), article_abstract) AS article_content,
@@ -341,6 +347,7 @@
     </select>
     <select id="getLastArticle" resultMap="ArticleCardDTOResultMap">
         SELECT a.id                            AS id,
+               user_id,
                article_cover,
                article_title,
                if(article_abstract is null or article_abstract = '', SUBSTR(article_content, 1, 500), article_abstract) AS article_content,
@@ -380,6 +387,7 @@
     </select>
     <select id="listArticlesByTagId" resultMap="ArticleCardDTOResultMap">
         SELECT a.id                            AS id,
+               user_id,
                category_id,
                article_cover,
                article_title,

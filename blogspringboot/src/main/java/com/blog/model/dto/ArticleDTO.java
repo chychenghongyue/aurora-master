@@ -17,6 +17,8 @@ import java.util.List;
 public class ArticleDTO {
     private Integer id;
 
+    private Integer userId;
+
     private UserInfo author;
 
     private String categoryName;

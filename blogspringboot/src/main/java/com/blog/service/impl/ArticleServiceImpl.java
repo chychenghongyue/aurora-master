@@ -124,6 +124,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<Article>().eq(Article::getCategoryId, categoryId);
         CompletableFuture<Integer> asyncCount = CompletableFuture.supplyAsync(() -> Math.toIntExact(articleMapper.selectCount(queryWrapper)));
         List<ArticleCardDTO> articles = articleMapper.getArticlesByCategoryId(PageUtil.getLimitCurrent(), PageUtil.getSize(), categoryId);
+        articles.forEach(item -> {
+            UserAuth userAuth = userAuthMapper.selectById(item.getUserId());
+            UserInfo userInfo = new UserInfo();
+            if (userAuth != null)
+                userInfo = userInfoMapper.selectById(userAuth.getUserInfoId());
+            item.setAuthor(userInfo);
+        });
         return new PageResultDTO<>(articles, asyncCount.get());
     }
 
@@ -151,6 +158,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             ArticleCardDTO preArticle = articleMapper.getPreArticleById(articleId);
             if (Objects.isNull(preArticle)) {
                 preArticle = articleMapper.getLastArticle();
+                UserAuth userAuth = userAuthMapper.selectById(preArticle.getUserId());
+                UserInfo userInfo = userInfoMapper.selectById(userAuth.getUserInfoId());
+                preArticle.setAuthor(userInfo);
             }
             return preArticle;
         });
@@ -158,6 +168,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             ArticleCardDTO nextArticle = articleMapper.getNextArticleById(articleId);
             if (Objects.isNull(nextArticle)) {
                 nextArticle = articleMapper.getFirstArticle();
+                UserAuth userAuth = userAuthMapper.selectById(nextArticle.getUserId());
+                UserInfo userInfo = userInfoMapper.selectById(userAuth.getUserInfoId());
+                nextArticle.setAuthor(userInfo);
             }
             return nextArticle;
         });
@@ -165,12 +178,16 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (Objects.isNull(article)) {
             return null;
         }
+        UserAuth userAuth = userAuthMapper.selectById(article.getUserId());
+        UserInfo userInfo = userInfoMapper.selectById(userAuth.getUserInfoId());
+        article.setAuthor(userInfo);
         Double score = redisService.zScore(ARTICLE_VIEWS_COUNT, articleId);
         if (Objects.nonNull(score)) {
             article.setViewCount(score.intValue());
         }
         article.setPreArticleCard(asyncPreArticle.get());
         article.setNextArticleCard(asyncNextArticle.get());
+
         return article;
     }
 
@@ -193,6 +210,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         LambdaQueryWrapper<ArticleTag> queryWrapper = new LambdaQueryWrapper<ArticleTag>().eq(ArticleTag::getTagId, tagId);
         CompletableFuture<Integer> asyncCount = CompletableFuture.supplyAsync(() -> Math.toIntExact(articleTagMapper.selectCount(queryWrapper)));
         List<ArticleCardDTO> articles = articleMapper.listArticlesByTagId(PageUtil.getLimitCurrent(), PageUtil.getSize(), tagId);
+        articles.forEach(item -> {
+            UserAuth userAuth = userAuthMapper.selectById(item.getUserId());
+            UserInfo userInfo = userInfoMapper.selectById(userAuth.getUserInfoId());
+            item.setAuthor(userInfo);
+        });
         return new PageResultDTO<>(articles, asyncCount.get());
     }
 
