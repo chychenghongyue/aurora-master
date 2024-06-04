@@ -3,6 +3,7 @@
 <mapper namespace="com.blog.mapper.ArticleMapper">
     <resultMap id="ArticleCardDTOResultMap" type="com.blog.model.dto.ArticleCardDTO">
         <id property="id" column="id"/>
+        <id property="userId" column="user_id"/>
         <result property="articleCover" column="article_cover"/>
         <result property="articleTitle" column="article_title"/>
         <result property="articleContent" column="article_content"/>
@@ -60,6 +61,7 @@
     </resultMap>
     <select id="listTopAndFeaturedArticles" resultMap="ArticleCardDTOResultMap">
         SELECT a.id                            AS id,
+               user_id,
                category_id,
                article_cover,
                article_title,
@@ -100,6 +102,7 @@
     <select id="listArticles" resultMap="ArticleCardDTOResultMap">
         SELECT a.id                            AS id,
                article_cover,
+               a.user_id,
                article_title,
                if(article_abstract is null or article_abstract = '', SUBSTR(article_content, 1, 500), article_abstract) AS article_content,
                is_top,

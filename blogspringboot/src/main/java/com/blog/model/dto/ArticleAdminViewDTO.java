@@ -20,6 +20,8 @@ public class ArticleAdminViewDTO {
 
     private Integer id;
 
+    private Integer userId;
+
     private String articleTitle;
 
     private String articleAbstract;

@@ -50,7 +50,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private ArticleMapper articleMapper;
     @Autowired
     private UserArticleMapper userArticleMapper;
-
+    @Autowired
+    private UserInfoMapper userInfoMapper;
+    @Autowired
+    private UserAuthMapper userAuthMapper;
     @Autowired
     private ArticleTagMapper articleTagMapper;
 
@@ -87,6 +90,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         } else if (articleCardDTOs.size() > 3) {
             articleCardDTOs = articleCardDTOs.subList(0, 3);
         }
+        articleCardDTOs.forEach(item -> {
+            UserAuth userAuth = userAuthMapper.selectById(item.getUserId());
+            UserInfo userInfo = userInfoMapper.selectById(userAuth.getUserInfoId());
+            item.setAuthor(userInfo);
+        });
         TopAndFeaturedArticlesDTO topAndFeaturedArticlesDTO = new TopAndFeaturedArticlesDTO();
         topAndFeaturedArticlesDTO.setTopArticle(articleCardDTOs.get(0));
         articleCardDTOs.remove(0);
@@ -102,6 +110,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 .in(Article::getStatus, 1, 2);
         CompletableFuture<Integer> asyncCount = CompletableFuture.supplyAsync(() -> Math.toIntExact(articleMapper.selectCount(queryWrapper)));
         List<ArticleCardDTO> articles = articleMapper.listArticles(PageUtil.getLimitCurrent(), PageUtil.getSize());
+        articles.forEach(item -> {
+            UserAuth userAuth = userAuthMapper.selectById(item.getUserId());
+            UserInfo userInfo = userInfoMapper.selectById(userAuth.getUserInfoId());
+            item.setAuthor(userInfo);
+        });
         return new PageResultDTO<>(articles, asyncCount.get());
     }
 
@@ -240,11 +253,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public PageResultDTO<ArticleAdminDTO> listArticlesByUserId(ConditionVO conditionVO) {
         int userId = UserUtil.getUserDetailsDTO().getId();
-        System.err.println("userId"+userId);
+        System.err.println("userId" + userId);
         CompletableFuture<Integer> asyncCount = CompletableFuture.supplyAsync(() -> articleMapper.countArticleById(conditionVO, userId));
         List<ArticleAdminDTO> articleAdminDTOs = articleMapper.selectByUserId(conditionVO, userId);
         Map<Object, Double> viewsCountMap = redisService.zAllScore(ARTICLE_VIEWS_COUNT);
-        System.err.println("articleAdminDTOs"+articleAdminDTOs);
+        System.err.println("articleAdminDTOs" + articleAdminDTOs);
 
         QueryWrapper<UserArticle> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId);
@@ -291,12 +304,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveOrUpdateArticle(ArticleVO articleVO) {
-        Category category = saveArticleCategory(articleVO);
+        System.err.println("文章自动更新：" + articleVO);
         Article article = BeanCopyUtil.copyObject(articleVO, Article.class);
-        if (Objects.nonNull(category)) {
-            article.setCategoryId(category.getId());
+        if (articleVO.getCategoryName() != null) {
+            Category category = saveArticleCategory(articleVO);
+            if (Objects.nonNull(category)) {
+                article.setCategoryId(category.getId());
+            }
         }
-        article.setUserId(UserUtil.getUserDetailsDTO().getId());
+//        article.setUserId(UserUtil.getUserDetailsDTO().getId());
         this.saveOrUpdate(article);
         saveArticleTag(articleVO, article.getId());
         if (article.getStatus().equals(1)) {
@@ -349,6 +365,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Transactional(rollbackFor = Exception.class)
     public ArticleAdminViewDTO getArticleByIdAdmin(Integer articleId) {
         Article article = articleMapper.selectById(articleId);
+        System.err.println("跳转" + article);
         Category category = categoryMapper.selectById(article.getCategoryId());
         String categoryName = null;
         if (Objects.nonNull(category)) {
@@ -396,7 +413,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             category = Category.builder()
                     .categoryName(articleVO.getCategoryName())
                     .build();
-            categoryMapper.insert(category);
+            if (category.getCategoryName() != null)
+                categoryMapper.insert(category);
         }
         return category;
     }

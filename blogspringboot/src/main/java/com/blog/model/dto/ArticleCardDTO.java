@@ -18,6 +18,8 @@ public class ArticleCardDTO {
 
     private Integer id;
 
+    private Integer userId;
+
     private String articleCover;
 
     private String articleTitle;

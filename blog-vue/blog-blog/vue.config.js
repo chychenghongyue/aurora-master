@@ -18,6 +18,9 @@ module.exports = defineConfig({
                     '^/api': ''
                 }
             }
+        },
+        client: {
+            overlay: false
         }
     },
     configureWebpack: {
