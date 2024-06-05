@@ -90,9 +90,9 @@ public class ArticleController {
     @OptLog(optType = SAVE_OR_UPDATE)
     @ApiOperation("保存和修改文章")
     @PostMapping({"/admin/articles", "/articles"})
-    public ResultVO<?> saveOrUpdateArticle(@Valid @RequestBody ArticleVO articleVO) {
-        articleService.saveOrUpdateArticle(articleVO);
-        return ResultVO.ok();
+    public ResultVO<ArticleVO> saveOrUpdateArticle(@Valid @RequestBody ArticleVO articleVO) {
+         ArticleVO articleVO1 = articleService.saveOrUpdateArticle(articleVO);
+        return ResultVO.ok(articleVO1);
     }
 
     @OptLog(optType = UPDATE)

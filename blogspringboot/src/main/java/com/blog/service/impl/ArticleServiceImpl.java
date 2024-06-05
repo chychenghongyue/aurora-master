@@ -162,6 +162,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 UserInfo userInfo = userInfoMapper.selectById(userAuth.getUserInfoId());
                 preArticle.setAuthor(userInfo);
             }
+            UserAuth userAuth = userAuthMapper.selectById(preArticle.getUserId());
+            UserInfo userInfo = userInfoMapper.selectById(userAuth.getUserInfoId());
+            preArticle.setAuthor(userInfo);
             return preArticle;
         });
         CompletableFuture<ArticleCardDTO> asyncNextArticle = CompletableFuture.supplyAsync(() -> {
@@ -172,6 +175,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 UserInfo userInfo = userInfoMapper.selectById(userAuth.getUserInfoId());
                 nextArticle.setAuthor(userInfo);
             }
+            UserAuth userAuth = userAuthMapper.selectById(nextArticle.getUserId());
+            UserInfo userInfo = userInfoMapper.selectById(userAuth.getUserInfoId());
+            nextArticle.setAuthor(userInfo);
             return nextArticle;
         });
         ArticleDTO article = asyncArticle.get();
@@ -284,7 +290,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         QueryWrapper<UserArticle> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId);
         List<UserArticle> userArticles = userArticleMapper.selectList(queryWrapper);
-        int count = userArticles.size() + asyncCount.get();
         System.err.println("userArticles" + userArticles);
         articleAdminDTOs.forEach(item -> {
             item.setUserId(userId);
@@ -296,11 +301,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         List<Article> articles = new ArrayList<>();
         if (!userArticles.isEmpty()) {
             userArticles.forEach(item -> {
-                Article article = articleMapper.selectById(item.getArticleId());
-                article.setUserId(item.getCreatId());
-                articles.add(article);
+                QueryWrapper<Article> queryWrapperArticle = new QueryWrapper<>();
+                queryWrapperArticle.eq("id", item.getArticleId())
+                        .eq("is_delete", conditionVO.getIsDelete());
+                Article article = articleMapper.selectOne(queryWrapperArticle);
+                if (article != null)
+                    articles.add(article);
             });
-            System.err.println("articles" + articles);
             if (!articles.isEmpty()) {
                 for (Article item : articles) {
                     articleAdminDTOs.add(ArticleAdminDTO.builder()
@@ -316,6 +323,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 }
             }
         }
+        int count = articles.size() + asyncCount.get();
         int currentPage = (conditionVO.getCurrent().intValue() - 1) * conditionVO.getSize().intValue();
         int sizeTemp = conditionVO.getSize().intValue();
         int size = Math.min(currentPage + sizeTemp, articleAdminDTOs.size());
@@ -325,7 +333,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveOrUpdateArticle(ArticleVO articleVO) {
+    public ArticleVO saveOrUpdateArticle(ArticleVO articleVO) {
         System.err.println("文章自动更新：" + articleVO);
         Article article = BeanCopyUtil.copyObject(articleVO, Article.class);
         if (articleVO.getCategoryName() != null) {
@@ -334,7 +342,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 article.setCategoryId(category.getId());
             }
         }
-//        article.setUserId(UserUtil.getUserDetailsDTO().getId());
         this.saveOrUpdate(article);
         saveArticleTag(articleVO, article.getId());
         if (article.getStatus().equals(1)) {
@@ -348,6 +355,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             log.error("发送到elastic");
             rabbitTemplate.convertAndSend(SUBSCRIBE_EXCHANGE, new Message(JSON.toJSONBytes(article.getId()), new MessageProperties()));
         }
+        return ArticleVO.builder().id(article.getId()).build();
     }
 
     @Override

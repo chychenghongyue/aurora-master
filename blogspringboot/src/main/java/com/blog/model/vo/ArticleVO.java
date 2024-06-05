@@ -3,7 +3,10 @@ package com.blog.model.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -17,6 +20,7 @@ public class ArticleVO {
 
     @ApiModelProperty(name = "id", value = "文章id", dataType = "Integer")
     private Integer id;
+    private Integer userId;
 
     @NotBlank(message = "文章标题不能为空")
     @ApiModelProperty(name = "articleTitle", value = "文章标题", required = true, dataType = "String")

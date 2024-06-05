@@ -1,9 +1,9 @@
 package com.blog.service;
 
-import com.blog.model.dto.*;
-import com.blog.entity.Article;
-import com.blog.model.vo.*;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.blog.entity.Article;
+import com.blog.model.dto.*;
+import com.blog.model.vo.*;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public interface ArticleService extends IService<Article> {
 
     PageResultDTO<ArticleAdminDTO> listArticlesAdmin(ConditionVO conditionVO);
 
-    void saveOrUpdateArticle(ArticleVO articleVO);
+    ArticleVO saveOrUpdateArticle(ArticleVO articleVO);
 
     void updateArticleTopAndFeatured(ArticleTopFeaturedVO articleTopFeaturedVO);
 
