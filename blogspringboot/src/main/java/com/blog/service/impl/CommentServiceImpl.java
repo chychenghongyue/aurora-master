@@ -106,10 +106,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 .eq(Comment::getType, commentVO.getType())
                 .isNull(Comment::getParentId)
                 .eq(Comment::getIsReview, TRUE)));
+        System.err.println(commentCount);
         if (commentCount == 0) {
             return new PageResultDTO<>();
         }
         List<CommentDTO> commentDTOs = commentMapper.listComments(PageUtil.getLimitCurrent(), PageUtil.getSize(), commentVO);
+        System.err.println(commentDTOs);
         if (CollectionUtils.isEmpty(commentDTOs)) {
             return new PageResultDTO<>();
         }

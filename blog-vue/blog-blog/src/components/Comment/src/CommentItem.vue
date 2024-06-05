@@ -1,30 +1,30 @@
 <template>
   <div class="mt-5 max-w-full">
     <div class="flex space-x-3 xl:space-x-5">
-      <Avatar :url="comment.avatar"/>
+      <Avatar :url="comment.avatar" />
       <div class="max-w-full-calc space-y-5">
         <div class="bg-white text-primary p-4 rounded-md relative shadow-md reply" style="width: fit-content">
-          <p class="commentContent" v-html="comment.commentContent.replaceAll('\n', '<br>')"/>
+          <p class="commentContent" v-html="comment.commentContent.replaceAll('\n', '<br>')" />
           <div class="flex justify-between mt-3 text-xs text-gray-400 space-x-3 md:space-x-16">
             <span>{{ comment.nickname }} | {{ time }}</span>
             <div>
-              <span class="cursor-pointer reply-button" @click="clickOnDelete">删除</span>
+              <span  class="cursor-pointer reply-button">删除</span>
               &nbsp;&nbsp;&nbsp;&nbsp;
-              <span class="cursor-pointer reply-button" @click="clickOnReply">回复</span>
+              <span @click="clickOnReply" class="cursor-pointer reply-button">回复</span>
             </div>
           </div>
         </div>
         <CommentReplyForm
-            v-show="show"
-            :initialContent="replyContent"
-            :replyUserId="comment.userId"
-            @changeShow="changeShow"/>
+          v-show="show"
+          :replyUserId="comment.userId"
+          :initialContent="replyContent"
+          @changeShow="changeShow" />
         <transition-group name="fade">
           <CommentReplyItem
-              v-for="reply in comment.replyDTOs"
-              :key="reply.id"
-              :commentUserId="comment.userId"
-              :reply="reply"/>
+            v-for="reply in comment.replyDTOs"
+            :key="reply.id"
+            :reply="reply"
+            :commentUserId="comment.userId" />
         </transition-group>
       </div>
     </div>
@@ -32,11 +32,10 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, provide, reactive, toRefs} from 'vue'
+import { defineComponent, reactive, ref, toRefs, provide } from 'vue'
 import Avatar from '@/components/Avatar.vue'
 import CommentReplyItem from './CommentReplyItem.vue'
 import CommentReplyForm from './CommentReplyForm.vue'
-import axios from "axios";
 
 export default defineComponent({
   components: {
@@ -68,18 +67,9 @@ export default defineComponent({
       reactiveData.replyContent = 'add reply...'
       reactiveData.show = true
     }
-    // const clickOnDelete = () => {
-    //   axios.delete('/api/comment/' + comment.id)
-    //       .then(res => {
-    //         if (res.data.code === 200) {
-    //           window.location.reload()
-    //         }
-    //       })
-    // }
     return {
       ...toRefs(reactiveData),
       clickOnReply,
-      // clickOnDelete,
       changeShow
     }
   }
@@ -97,15 +87,12 @@ export default defineComponent({
   left: -8px;
   top: 14px;
 }
-
 .reply {
   background: var(--background-primary);
 }
-
 .reply-button {
   color: var(--text-accent);
 }
-
 .commentContent {
   line-height: 26px;
   white-space: pre-line;

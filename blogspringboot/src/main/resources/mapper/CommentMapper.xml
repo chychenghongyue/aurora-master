@@ -12,7 +12,8 @@
         c.create_time
         FROM
         t_comment c
-        JOIN t_user_info u ON c.user_id = u.id
+        join t_user_auth a on a.id = c.user_id
+        JOIN t_user_info u ON a.user_info_id = u.id
         <where>
             <if test="commentVO.topicId != null">
                 topic_id = #{commentVO.topicId}
@@ -138,11 +139,11 @@
         topic_id
     </select>
     <select id="listCommentCountByTypeAndTopicId" resultType="com.blog.model.dto.CommentCountDTO">
-        SELECT topic_id as id,
-               COUNT(1) AS comment_count
-        FROM t_comment
-        WHERE type = #{type}
-          AND topic_id = #{topicId}
-        GROUP BY topic_id
+        SELECT t.topic_id as id,
+               COUNT(1)   AS comment_count
+        FROM t_comment t
+        WHERE t.type = #{type}
+          AND t.topic_id = #{topicId}
+        GROUP BY t.topic_id
     </select>
 </mapper>

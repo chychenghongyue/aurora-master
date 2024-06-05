@@ -7,7 +7,7 @@
         <div class="flex justify-between mt-2 text-xs text-gray-400 space-x-3 md:space-x-16">
           <span> {{ reply.nickname }} | {{ time }}</span>
           <div>
-            <span class="cursor-pointer reply-button" @click="clickOnDelete">删除</span>
+            <span  class="cursor-pointer reply-button">删除</span>
             &nbsp;&nbsp;&nbsp;&nbsp;
             <span @click="clickOnSonReply" class="cursor-pointer reply-button">回复</span>
           </div>
@@ -28,7 +28,6 @@
 import { computed, defineComponent, reactive, toRefs } from 'vue'
 import Avatar from '@/components/Avatar.vue'
 import CommentReplyForm from './CommentReplyForm.vue'
-import axios from "axios";
 
 export default defineComponent({
   components: {
@@ -53,14 +52,6 @@ export default defineComponent({
       reactiveData.replyContent = '@' + props.reply.nickname
       reactiveData.show = true
     }
-    const clickOnDelete = () => {
-      axios.delete('/api/comment/' + comment.id)
-          .then(res => {
-            if (res.data.code === 200) {
-              window.location.reload()
-            }
-          })
-    }
     const changeShow = () => {
       reactiveData.show = false
     }
@@ -78,8 +69,7 @@ export default defineComponent({
       ...toRefs(reactiveData),
       commentContent,
       clickOnSonReply,
-      changeShow,
-      clickOnDelete
+      changeShow
     }
   }
 })
