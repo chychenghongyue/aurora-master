@@ -39,12 +39,10 @@ import {useAppStore} from '@/stores/app'
 import {useCommonStore} from '@/stores/common'
 import {useMetaStore} from '@/stores/meta'
 import HeaderMain from '@/components/Header/src/Header.vue'
-import Footer from '@/components/Footer.vue'
-import MobileMenu from '@/components/MobileMenu.vue'
-import Dia from '@/components/Dia.vue'
 import AuroraNavigator from '@/components/AuroraNavigator.vue'
 import UserCenter from '@/components/UserCenter.vue'
 import api from './api/api'
+import MobileMenu from "@/components/MobileMenu.vue";
 
 
 export default defineComponent({

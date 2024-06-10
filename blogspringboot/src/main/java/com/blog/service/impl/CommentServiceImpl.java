@@ -1,35 +1,29 @@
 package com.blog.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.blog.model.dto.*;
-import com.blog.entity.Article;
-import com.blog.entity.Comment;
-import com.blog.entity.Talk;
-import com.blog.entity.UserInfo;
-import com.blog.enums.CommentTypeEnum;
-import com.blog.exception.BizException;
-import com.blog.mapper.ArticleMapper;
-import com.blog.mapper.CommentMapper;
-import com.blog.mapper.TalkMapper;
-import com.blog.mapper.UserInfoMapper;
-import com.blog.service.blogInfoService;
-import com.blog.service.CommentService;
-import com.blog.util.HTMLUtil;
-import com.blog.util.PageUtil;
-import com.blog.util.UserUtil;
-import com.blog.model.vo.CommentVO;
-import com.blog.model.vo.ConditionVO;
-import com.blog.model.dto.PageResultDTO;
-import com.blog.model.vo.ReviewVO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.blog.entity.*;
+import com.blog.enums.CommentTypeEnum;
+import com.blog.exception.BizException;
+import com.blog.mapper.*;
+import com.blog.model.dto.*;
+import com.blog.model.vo.CommentVO;
+import com.blog.model.vo.ConditionVO;
+import com.blog.model.vo.ReviewVO;
+import com.blog.service.CommentService;
+import com.blog.service.blogInfoService;
+import com.blog.util.HTMLUtil;
+import com.blog.util.PageUtil;
+import com.blog.util.UserUtil;
 import lombok.SneakyThrows;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -46,28 +40,24 @@ import static com.blog.enums.CommentTypeEnum.*;
 @Service
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
 
+    private static final List<Integer> types = new ArrayList<>();
     @Value("${website.url}")
     private String websiteUrl;
-
     @Autowired
     private CommentMapper commentMapper;
-
     @Autowired
     private ArticleMapper articleMapper;
-
     @Autowired
     private TalkMapper talkMapper;
-
     @Autowired
     private UserInfoMapper userInfoMapper;
-
     @Autowired
     private blogInfoService blogInfoService;
-
     @Autowired
     private RabbitTemplate rabbitTemplate;
-
-    private static final List<Integer> types = new ArrayList<>();
+    @Qualifier("userAuthMapper")
+    @Autowired
+    private UserAuthMapper userAuthMapper;
 
     @PostConstruct
     public void init() {
@@ -119,9 +109,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 .map(CommentDTO::getId)
                 .collect(Collectors.toList());
         List<ReplyDTO> replyDTOS = commentMapper.listReplies(commentIds);
+        System.err.println(replyDTOS);
         Map<Integer, List<ReplyDTO>> replyMap = replyDTOS.stream()
                 .collect(Collectors.groupingBy(ReplyDTO::getParentId));
         commentDTOs.forEach(item -> item.setReplyDTOs(replyMap.get(item.getId())));
+        System.err.println(commentDTOs);
         return new PageResultDTO<>(commentDTOs, commentCount);
     }
 
@@ -140,6 +132,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     public PageResultDTO<CommentAdminDTO> listCommentsAdmin(ConditionVO conditionVO) {
         CompletableFuture<Integer> asyncCount = CompletableFuture.supplyAsync(() -> commentMapper.countComments(conditionVO));
         List<CommentAdminDTO> commentBackDTOList = commentMapper.listCommentsAdmin(PageUtil.getLimitCurrent(), PageUtil.getSize(), conditionVO);
+        System.err.println(commentBackDTOList);
         return new PageResultDTO<>(commentBackDTOList, asyncCount.get());
     }
 
@@ -201,8 +194,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             if (Objects.isNull(commentVO.getReplyUserId())) {
                 throw new BizException("参数校验异常");
             } else {
-                UserInfo existUser = userInfoMapper.selectOne(new LambdaQueryWrapper<UserInfo>().select(UserInfo::getId).eq(UserInfo::getId, commentVO.getReplyUserId()));
-                if (Objects.isNull(existUser)) {
+//                UserInfo existUser = userInfoMapper.selectOne(new LambdaQueryWrapper<UserInfo>().select(UserInfo::getId).eq(UserInfo::getId, commentVO.getReplyUserId()));
+                UserAuth userAuth = userAuthMapper.selectOne(new LambdaQueryWrapper<UserAuth>().select(UserAuth::getId).eq(UserAuth::getId, commentVO.getReplyUserId()));
+                if (Objects.isNull(userAuth)) {
                     throw new BizException("参数校验异常");
                 }
             }

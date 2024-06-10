@@ -46,17 +46,17 @@
       <li
           class="not-italic font-medium text-xs h-full relative flex flex-col items-center justify-center cursor-pointer text-center py-4 px-2"
           data-menu="PhotoAlbums">
-        <Dropdown hover class="nav-link text-sm block px-1.5 py-0.5 rounded-md relative uppercase">
-          <span class="relative z-50" v-if="$i18n.locale === 'cn'"> 相册 </span>
-          <span class="relative z-50" v-else-if="$i18n.locale === 'en'"> PhotoAlbums </span>
-          <DropdownMenu>
-            <template v-for="item in albums" :key="item.id">
-              <DropdownItem @click="pushPage(`/photos/${item.id}`)" :name="item.albumName">
-                <span class="relative z-50">{{ item.albumName }}</span>
-              </DropdownItem>
-            </template>
-          </DropdownMenu>
-        </Dropdown>
+<!--        <Dropdown hover class="nav-link text-sm block px-1.5 py-0.5 rounded-md relative uppercase">-->
+<!--          <span class="relative z-50" v-if="$i18n.locale === 'cn'"> 相册 </span>-->
+<!--          <span class="relative z-50" v-else-if="$i18n.locale === 'en'"> PhotoAlbums </span>-->
+<!--          <DropdownMenu>-->
+<!--            <template v-for="item in albums" :key="item.id">-->
+<!--              <DropdownItem @click="pushPage(`/photos/${item.id}`)" :name="item.albumName">-->
+<!--                <span class="relative z-50">{{ item.albumName }}</span>-->
+<!--              </DropdownItem>-->
+<!--            </template>-->
+<!--          </DropdownMenu>-->
+<!--        </Dropdown>-->
       </li>
     </ul>
   </nav>

@@ -199,18 +199,21 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     @Override
     public PageResultDTO<UserInfoDTO> selectAll(ConditionVO conditionVO) {
         System.err.println(conditionVO);
-        QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
-        Integer count = userInfoMapper.selectCount(queryWrapper);
+        QueryWrapper<UserAuth> queryWrapper = new QueryWrapper<>();
+        Integer count = userAuthMapper.selectCount(queryWrapper);
         int current = conditionVO.getCurrent().intValue();
         int size = conditionVO.getSize().intValue();
         int fromIndex = (current - 1) * size;
         queryWrapper.last("limit" + " " + fromIndex + "," + conditionVO.getSize());
-        List<UserInfo> userInfos = userInfoMapper.selectList(queryWrapper);
+        List<UserAuth> userAuths = userAuthMapper.selectList(queryWrapper);
         List<UserInfoDTO> userInfoDTOS = new ArrayList<>();
         if (count != 0) {
-            for (UserInfo userInfo : userInfos) {
+            for (UserAuth userAuth : userAuths) {
+                QueryWrapper<UserInfo> queryWrapper1 = new QueryWrapper<>();
+                queryWrapper1.eq("id", userAuth.getUserInfoId());
+                UserInfo userInfo = userInfoMapper.selectOne(queryWrapper1);
                 UserInfoDTO build = UserInfoDTO.builder()
-                        .id(userInfo.getId())
+                        .id(userAuth.getId())
                         .email(userInfo.getEmail())
                         .nickname(userInfo.getNickname())
                         .avatar(userInfo.getAvatar())

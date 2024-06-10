@@ -304,6 +304,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 QueryWrapper<Article> queryWrapperArticle = new QueryWrapper<>();
                 queryWrapperArticle.eq("id", item.getArticleId())
                         .eq("is_delete", conditionVO.getIsDelete());
+                if (conditionVO.getStatus() != null && conditionVO.getStatus() == 3)
+                    queryWrapperArticle.eq("status", conditionVO.getStatus());
                 Article article = articleMapper.selectOne(queryWrapperArticle);
                 if (article != null)
                     articles.add(article);
@@ -334,6 +336,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ArticleVO saveOrUpdateArticle(ArticleVO articleVO) {
+        if (articleVO.getId() != null){
+            Article article = articleMapper.selectById(articleVO.getId());
+            if (article.getStatus() == 3 && articleVO.getStatus() == 1) {
+                userArticleMapper.delete(new QueryWrapper<UserArticle>().eq("article_id", articleVO.getId()));
+            }
+        }
         System.err.println("文章自动更新：" + articleVO);
         Article article = BeanCopyUtil.copyObject(articleVO, Article.class);
         if (articleVO.getCategoryName() != null) {

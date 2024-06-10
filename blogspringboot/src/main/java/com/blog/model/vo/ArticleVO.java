@@ -20,6 +20,7 @@ public class ArticleVO {
 
     @ApiModelProperty(name = "id", value = "文章id", dataType = "Integer")
     private Integer id;
+    @ApiModelProperty(name = "userId", value = "用户id", dataType = "Integer")
     private Integer userId;
 
     @NotBlank(message = "文章标题不能为空")
