@@ -1,24 +1,26 @@
-const { defineConfig } = require('@vue/cli-service')
+const {defineConfig} = require('@vue/cli-service')
 const path = require('path')
+
 function resolve(dir) {
-  return path.join(__dirname, dir)
+    return path.join(__dirname, dir)
 }
+
 module.exports = defineConfig({
-  transpileDependencies: true,
-  productionSourceMap: false,
-  devServer: {
-    proxy: {
-      '/api': {
-        // target: 'http://localhost:8888',
-        target: 'http://localhost:8888',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api': ''
+    transpileDependencies: true,
+    productionSourceMap: false,
+    devServer: {
+        proxy: {
+            '/api': {
+                // target: 'http://localhost:8888',
+                target: 'http://localhost:8888',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/api': ''
+                }
+            }
         }
-      }
+    },
+    chainWebpack: (config) => {
+        config.resolve.alias.set('@', resolve('src'))
     }
-  },
-  chainWebpack: (config) => {
-    config.resolve.alias.set('@', resolve('src'))
-  }
 })
